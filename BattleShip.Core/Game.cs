@@ -22,7 +22,7 @@ namespace BattleShip.Core
 
         public ShotResultStatus FireMissile(string coordinate)
         {
-            var position = ExtractGridCordinatesFromOneDimensionalCordinate(coordinate);
+            var position = ConvertToGridCoordinate(coordinate);
 
             if(OceanGrid[position.HorizontalAxis, position.VeriticalAxis].ContainsShip())
             {
@@ -162,7 +162,7 @@ namespace BattleShip.Core
             return false;
         }
 
-        private GridCordinate ExtractGridCordinatesFromOneDimensionalCordinate(string coordinate)
+        private GridCordinate ConvertToGridCoordinate(string coordinate)
         {
             if (string.IsNullOrEmpty(coordinate) || coordinate.Length < 2)
             {
