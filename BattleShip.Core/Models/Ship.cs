@@ -51,7 +51,7 @@ namespace BattleShip.Core.Models
             return false;
         }
 
-        public void SetShipDirection(ShipDirection direction)
+        public void SetDirection(ShipDirection direction)
         {
             if (direction == ShipDirection.Unknown)
             {
@@ -61,7 +61,7 @@ namespace BattleShip.Core.Models
             Direction = direction;
         }
 
-        public void SetShipPosition(GridCordinate position)
+        public void SetPosition(GridCordinate position)
         {
             if (position == null)
             {

@@ -19,9 +19,9 @@ namespace BattleShip.Core
 
         bool IsHit(GridCordinate positon);
 
-        void SetShipPosition(GridCordinate position);
+        void SetPosition(GridCordinate position);
 
-        void SetShipDirection(ShipDirection direction);
+        void SetDirection(ShipDirection direction);
 
         void IncreaseHit();
     }

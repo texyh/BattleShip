@@ -72,7 +72,7 @@ namespace BattleShip.Tests
         {
             var ship = GivenAShip();
 
-            var exception = Assert.Throws<ArgumentNullException>(() => ship.SetShipDirection(ShipDirection.Unknown));
+            var exception = Assert.Throws<ArgumentNullException>(() => ship.SetDirection(ShipDirection.Unknown));
             Assert.Equal("please specify ship direction", exception.ParamName);
         }
 
@@ -82,7 +82,7 @@ namespace BattleShip.Tests
             var ship = GivenAShip();
             var direction = ShipDirection.Vertical;
 
-            ship.SetShipDirection(direction);
+            ship.SetDirection(direction);
 
             Assert.Equal(direction, ship.Direction);
         }
@@ -92,7 +92,7 @@ namespace BattleShip.Tests
         {
             var ship = GivenAShip();
 
-            var exception = Assert.Throws<ArgumentNullException>(() => ship.SetShipPosition(null));
+            var exception = Assert.Throws<ArgumentNullException>(() => ship.SetPosition(null));
             Assert.Equal("position cannot be null", exception.ParamName);
         }
 
@@ -102,7 +102,7 @@ namespace BattleShip.Tests
             var ship = GivenAShip();
             var position = new GridCordinate { HorizontalAxis = 0, VeriticalAxis = 0 };
 
-            ship.SetShipPosition(position);
+            ship.SetPosition(position);
 
             Assert.Equal(position, ship.Position);
         }
@@ -118,9 +118,9 @@ namespace BattleShip.Tests
         public void Ship_Should_Say_When_Its_Hit(int horizontalAxis, int verticalAxis, bool expectedResult)
         {
             var ship = new Destroyer();
-            ship.SetShipDirection(ShipDirection.Vertical);
+            ship.SetDirection(ShipDirection.Vertical);
             var shipPosition = new GridCordinate { HorizontalAxis = 0, VeriticalAxis = 0 };
-            ship.SetShipPosition(shipPosition);
+            ship.SetPosition(shipPosition);
             var attackPosition = new GridCordinate { HorizontalAxis = horizontalAxis, VeriticalAxis = verticalAxis };
 
             var ishit = ship.IsHit(attackPosition);

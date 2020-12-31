@@ -106,8 +106,8 @@ namespace BattleShip.Core
         private void SetShipPositionAndDirection(IShip ship)
         {
             var direction = GetRandomDirection();
-            ship.SetShipDirection(direction);
-            ship.SetShipPosition(GetRandomGridPosition(direction, ship.Size));
+            ship.SetDirection(direction);
+            ship.SetPosition(GetRandomGridPosition(direction, ship.Size));
         }
 
         private GridCordinate GetRandomGridPosition(ShipDirection shipDirection, int shipSize)
