@@ -8,7 +8,7 @@ namespace BattleShip.Core
 {
     public class Game
     {
-        public readonly int[,] OceanGrid = new int[OceanGridConstants.ROWS, OceanGridConstants.COLUMNS];
+        public readonly int[,] OceanGrid = new int[Core.OceanGrid.ROWS, Core.OceanGrid.COLUMNS];
 
         private IList<IShip> Ships = new List<IShip>();
 
@@ -116,16 +116,16 @@ namespace BattleShip.Core
             {
                 return new GridCordinate
                 {
-                    VeriticalAxis = new Random().Next(0, OceanGridConstants.COLUMNS),
-                    HorizontalAxis = new Random().Next(0, OceanGridConstants.ROWS - shipSize)
+                    VeriticalAxis = new Random().Next(0, Core.OceanGrid.COLUMNS),
+                    HorizontalAxis = new Random().Next(0, Core.OceanGrid.ROWS - shipSize)
                 };
 
             } else {
 
                 return new GridCordinate
                 {
-                    VeriticalAxis = new Random().Next(0, OceanGridConstants.COLUMNS - shipSize),
-                    HorizontalAxis = new Random().Next(0, OceanGridConstants.ROWS)
+                    VeriticalAxis = new Random().Next(0, Core.OceanGrid.COLUMNS - shipSize),
+                    HorizontalAxis = new Random().Next(0, Core.OceanGrid.ROWS)
                 };
             }
         }

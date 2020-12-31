@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BattleShip.Core
 {
-    public static class OceanGridConstants
+    public static class OceanGrid
     {
         public const int ROWS = 10;
 

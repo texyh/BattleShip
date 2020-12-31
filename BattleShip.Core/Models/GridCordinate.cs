@@ -22,7 +22,7 @@ namespace BattleShip.Core.Models
                    HorizontalAxis == other.HorizontalAxis;
         }
 
-        public bool IsInvalid() => (VeriticalAxis < 0 || VeriticalAxis >= OceanGridConstants.COLUMNS) ||
-                        (HorizontalAxis < 0 || HorizontalAxis >= OceanGridConstants.ROWS);
+        public bool IsInvalid() => (VeriticalAxis < 0 || VeriticalAxis >= OceanGrid.COLUMNS) ||
+                        (HorizontalAxis < 0 || HorizontalAxis >= OceanGrid.ROWS);
     }
 }

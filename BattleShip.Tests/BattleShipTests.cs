@@ -13,8 +13,8 @@ namespace BattleShip.Tests
         {
             var game = GivenGame();
 
-            Assert.Equal(OceanGridConstants.ROWS, game.OceanGrid.GetLength(0));
-            Assert.Equal(OceanGridConstants.COLUMNS, game.OceanGrid.GetLength(1));
+            Assert.Equal(OceanGrid.ROWS, game.OceanGrid.GetLength(0));
+            Assert.Equal(OceanGrid.COLUMNS, game.OceanGrid.GetLength(1));
         }
 
         [Fact]
@@ -97,9 +97,9 @@ namespace BattleShip.Tests
 
         private IEnumerable<string> GenerateCoordinate()
         {
-            for (int row = 0; row < OceanGridConstants.ROWS; row++)
+            for (int row = 0; row < OceanGrid.ROWS; row++)
             {
-                for (int column = 0; column < OceanGridConstants.COLUMNS; column++)
+                for (int column = 0; column < OceanGrid.COLUMNS; column++)
                 {
                     var columnAlpha = (column).ConvertToAlpabet();
 
