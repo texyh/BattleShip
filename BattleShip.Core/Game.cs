@@ -24,7 +24,7 @@ namespace BattleShip.Core
         {
             var position = ConvertToGridCoordinate(coordinate);
 
-            if(OceanGrid[position.HorizontalAxis, position.VeriticalAxis].ContainsShip())
+            if (OceanGrid[position.HorizontalAxis, position.VeriticalAxis].ContainsShip())
             {
                 IShip impactedShip = null;
                 var floatingShips = Ships.Where(x => !x.IsSunk);
@@ -40,15 +40,15 @@ namespace BattleShip.Core
                     }
                 }
 
-                if(Ships.All(x => x.IsSunk))
+                if (Ships.All(x => x.IsSunk))
                 {
                     return ShotStatus.SinkedAllShips;
-
-                } else if (impactedShip != null && impactedShip.IsSunk)
+                }
+                else if (impactedShip != null && impactedShip.IsSunk)
                 {
                     return ShotStatus.Sinks;
-
-                } else 
+                }
+                else
                 {
                     return ShotStatus.Hits;
                 }
@@ -119,9 +119,9 @@ namespace BattleShip.Core
                     VeriticalAxis = new Random().Next(0, Core.OceanGrid.COLUMNS),
                     HorizontalAxis = new Random().Next(0, Core.OceanGrid.ROWS - shipSize)
                 };
-
-            } else {
-
+            }
+            else
+            {
                 return new GridCordinate
                 {
                     VeriticalAxis = new Random().Next(0, Core.OceanGrid.COLUMNS - shipSize),
@@ -173,12 +173,12 @@ namespace BattleShip.Core
             var row = coordinate.Substring(1, coordinate.Length - 1);
             var charColumn = column.ToCharArray()[0];
 
-            if(!int.TryParse(row, out var horizontalAxis))
+            if (!int.TryParse(row, out var horizontalAxis))
             {
                 throw new ArgumentException("Invalid Coordinates");
             }
 
-            if(!char.IsLetter(charColumn))
+            if (!char.IsLetter(charColumn))
             {
                 throw new ArgumentException("Invalid Coordinates");
             }
@@ -187,7 +187,7 @@ namespace BattleShip.Core
 
             var gridCoordinate = new GridCordinate { HorizontalAxis = horizontalAxis - 1, VeriticalAxis = verticalAxis };
 
-            if(gridCoordinate.IsInvalid())
+            if (gridCoordinate.IsInvalid())
             {
                 throw new ArgumentException("Invalid Coordinates");
             }
