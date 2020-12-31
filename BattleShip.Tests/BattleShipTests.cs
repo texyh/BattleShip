@@ -45,7 +45,8 @@ namespace BattleShip.Tests
         [Theory]
         [InlineData("00")]
         [InlineData("0")]
-        [InlineData("))")]
+        [InlineData(")1")]
+        [InlineData(")(")]
         [InlineData("")]
         [InlineData("5a")]
         [InlineData("A11")]
@@ -73,7 +74,7 @@ namespace BattleShip.Tests
             {
                 for (int column = 0; column < 10; column++)
                 {
-                    if (game.OceanGrid[row, column] == (int)GridPositionType.Ship)
+                    if (game.OceanGrid[row, column].ContainsShip())
                     {
                         totalNumberOfShipSpaces++;
                     }
@@ -100,7 +101,7 @@ namespace BattleShip.Tests
             {
                 for (int column = 0; column < OceanGridConstants.COLUMNS; column++)
                 {
-                    var columnAlpha = column.ConvertToAlpabet();
+                    var columnAlpha = (column).ConvertToAlpabet();
 
                     yield return $"{columnAlpha}{row + 1}";
                 }
