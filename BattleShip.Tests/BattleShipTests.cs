@@ -11,31 +11,101 @@ namespace BattleShip.Tests
         [Fact]
         public void OceanGrid_Should_Be_Initialized_When_Game_IsCreated()
         {
-            var game = new BattleFieldBoard();
+            var game = GivenGame();
 
-            Assert.Equal(10, game.OceanGrid.GetLength(0));
-            Assert.Equal(10, game.OceanGrid.GetLength(1));
+            Assert.Equal(OceanGridConstants.ROWS, game.OceanGrid.GetLength(0));
+            Assert.Equal(OceanGridConstants.COLUMNS, game.OceanGrid.GetLength(1));
         }
 
         [Fact]
-        public void OceanGroid_Should_Have_One_BattleShip_When_Game_IsCreated()
+        public void OceanGrid_Should_Have_Two_Destroyers_And_One_BattleShip_When_Game_IsCreated()
         {
-            var game = new BattleFieldBoard();
-            var expectedNumberOfBattleShipSquares = 5;
-            var totalNumberOfBattleShip = 0;
+            var numberOfDestroyers = 2;
+            var numberOfBatttleShips = 1;
+            var expectedTotal = numberOfBatttleShips + numberOfDestroyers;
+            var game = GivenGame();
+
+            Assert.Equal(expectedTotal, game.ShipCount);
+        }
+
+        [Theory]
+        [InlineData("A5")]
+        public void Can_Attack_Using_One_Dimentional_Cordinate(string coordinate)
+        {
+            var game = GivenGame();
+
+            var result = game.FireMissile(coordinate);
+
+            Assert.IsType<ShotResultStatus>(result);
+        }
+
+        [Theory]
+        [InlineData("00")]
+        [InlineData("0")]
+        [InlineData("))")]
+        [InlineData("")]
+        [InlineData("5a")]
+        [InlineData("A10")]
+        [InlineData("A11")]
+        [InlineData("k1")]
+        public void Should_Throw_Error_If_The_Attack_Coordinates_IsInvalid(string coordinate)
+        {
+            var game = GivenGame();
+
+            var exception = Assert.Throws<ArgumentException>(() => game.FireMissile(coordinate));
+            Assert.Equal("Invalid Coordinates", exception.Message);
+        }
+
+        [Fact]
+        public void No_Ship_Should_Be_On_The_OceanGrid_After_AllShipSunked_Result()
+        {
+            var game = GivenGame();
+            var expectedShipSpaces = 0;
+            var totalNumberOfShipSpaces = 0;
+
+            PlayGame(game);
 
             for (int row = 0; row < 10; row++)
             {
                 for (int column = 0; column < 10; column++)
                 {
-                    if(game.OceanGrid[row, column] == 2)
+                    if (game.OceanGrid[row, column] == (int)GridPositionType.Ship)
                     {
-                        totalNumberOfBattleShip++;
+                        totalNumberOfShipSpaces++;
                     }
                 }
             }
 
-            Assert.Equal(expectedNumberOfBattleShipSquares, totalNumberOfBattleShip);
+            Assert.Equal(expectedShipSpaces, totalNumberOfShipSpaces);
+        }
+
+        private void PlayGame(Game game)
+        {
+            var gameResult = ShotResultStatus.Misses;
+            var coordinateIterator = GenerateCoordinate().GetEnumerator();
+
+            while (gameResult != ShotResultStatus.SinkedAllShips && coordinateIterator.MoveNext())
+            {
+                gameResult = game.FireMissile(coordinateIterator.Current);
+            }
+        }
+
+        private IEnumerable<string> GenerateCoordinate()
+        {
+            for (int row = 0; row < OceanGridConstants.ROWS; row++)
+            {
+                for (int column = 0; column < OceanGridConstants.COLUMNS; column++)
+                {
+                    var columnAlpha = column.ConvertToAlpabet();
+
+                    yield return $"{columnAlpha}{row}";
+                }
+            }
+        }
+
+        private Game GivenGame()
+        {
+            return new Game();
         }
     }
 }
