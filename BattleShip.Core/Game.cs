@@ -185,7 +185,7 @@ namespace BattleShip.Core
 
             var verticalAxis = char.ToUpper(charColumn) - 65;
 
-            var gridCoordinate = new GridCordinate { HorizontalAxis = horizontalAxis, VeriticalAxis = verticalAxis };
+            var gridCoordinate = new GridCordinate { HorizontalAxis = horizontalAxis - 1, VeriticalAxis = verticalAxis };
 
             if(gridCoordinate.IsInvalid())
             {

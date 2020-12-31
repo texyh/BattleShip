@@ -30,6 +30,9 @@ namespace BattleShip.Tests
 
         [Theory]
         [InlineData("A5")]
+        [InlineData("A1")]
+        [InlineData("J10")]
+
         public void Can_Attack_Using_One_Dimentional_Cordinate(string coordinate)
         {
             var game = GivenGame();
@@ -45,9 +48,10 @@ namespace BattleShip.Tests
         [InlineData("))")]
         [InlineData("")]
         [InlineData("5a")]
-        [InlineData("A10")]
         [InlineData("A11")]
         [InlineData("k1")]
+        [InlineData("A0")]
+        [InlineData("K0")]
         public void Should_Throw_Error_If_The_Attack_Coordinates_IsInvalid(string coordinate)
         {
             var game = GivenGame();
@@ -98,7 +102,7 @@ namespace BattleShip.Tests
                 {
                     var columnAlpha = column.ConvertToAlpabet();
 
-                    yield return $"{columnAlpha}{row}";
+                    yield return $"{columnAlpha}{row + 1}";
                 }
             }
         }

@@ -12,7 +12,7 @@ namespace BattleShip.Client
 
             var firingBoard = new Game();
             Console.WriteLine("==========================================================");
-            Console.WriteLine("=========== Enter a coordinate from A0 through J9 ========");
+            Console.WriteLine("=========== Enter a coordinate from A1 through J10 ========");
             Console.WriteLine("==========================================================");
 
             while (!cancellationToken.IsCancellationRequested)
