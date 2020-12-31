@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BattleShip.Core
 {
-    public enum ShotResultStatus
+    public enum ShotStatus
     {
         Misses,
         Hits,

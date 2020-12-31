@@ -20,7 +20,7 @@ namespace BattleShip.Core
 
         public int ShipCount => Ships.Count;
 
-        public ShotResultStatus FireMissile(string coordinate)
+        public ShotStatus FireMissile(string coordinate)
         {
             var position = ConvertToGridCoordinate(coordinate);
 
@@ -42,19 +42,19 @@ namespace BattleShip.Core
 
                 if(Ships.All(x => x.IsSunk))
                 {
-                    return ShotResultStatus.SinkedAllShips;
+                    return ShotStatus.SinkedAllShips;
 
                 } else if (impactedShip != null && impactedShip.IsSunk)
                 {
-                    return ShotResultStatus.Sinks;
+                    return ShotStatus.Sinks;
 
                 } else 
                 {
-                    return ShotResultStatus.Hits;
+                    return ShotStatus.Hits;
                 }
             }
 
-            return ShotResultStatus.Misses;
+            return ShotStatus.Misses;
         }
 
         private void AddTwoDestroyers()

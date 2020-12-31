@@ -23,7 +23,7 @@ namespace BattleShip.Client
                 {
                     var result = firingBoard.FireMissile(input);
 
-                    if (result == ShotResultStatus.SinkedAllShips)
+                    if (result == ShotStatus.SinkedAllShips)
                     {
                         cancellationToken.Cancel();
                     }

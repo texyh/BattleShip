@@ -39,7 +39,7 @@ namespace BattleShip.Tests
 
             var result = game.FireMissile(coordinate);
 
-            Assert.IsType<ShotResultStatus>(result);
+            Assert.IsType<ShotStatus>(result);
         }
 
         [Theory]
@@ -86,12 +86,12 @@ namespace BattleShip.Tests
 
         private void PlayGame(Game game)
         {
-            var gameResult = ShotResultStatus.Misses;
+            var shootStatus = ShotStatus.Misses;
             var coordinateIterator = GenerateCoordinate().GetEnumerator();
 
-            while (gameResult != ShotResultStatus.SinkedAllShips && coordinateIterator.MoveNext())
+            while (shootStatus != ShotStatus.SinkedAllShips && coordinateIterator.MoveNext())
             {
-                gameResult = game.FireMissile(coordinateIterator.Current);
+                shootStatus = game.FireMissile(coordinateIterator.Current);
             }
         }
 
