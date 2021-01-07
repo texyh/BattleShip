@@ -22,7 +22,21 @@ namespace BattleShip.Core.Models
                    HorizontalAxis == other.HorizontalAxis;
         }
 
+        public void MoveToNextPosition(ShipDirection shipDirection) 
+        {
+            if (shipDirection == ShipDirection.Horizontal)
+            {
+                VeriticalAxis++;
+            }
+            else
+            {
+                HorizontalAxis++;
+            }
+        }
+
         public bool IsInvalid() => (VeriticalAxis < 0 || VeriticalAxis >= OceanGrid.COLUMNS) ||
                         (HorizontalAxis < 0 || HorizontalAxis >= OceanGrid.ROWS);
+
+        
     }
 }

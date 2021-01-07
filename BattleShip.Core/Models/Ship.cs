@@ -19,31 +19,33 @@ namespace BattleShip.Core.Models
 
         public bool IsSunk => Hits == Size;
 
+        public GridCordinate GetInitialPosition()
+        {
+            return new GridCordinate 
+            { 
+              HorizontalAxis = Position.HorizontalAxis, 
+              VeriticalAxis = Position.VeriticalAxis
+            };
+        }
+
         public void IncreaseHit()
         {
             Hits++;
         }
 
-        public bool IsHit(GridCordinate positon)
+        public bool IsHit(GridCordinate missilePosition)
         {
-            var horizontalAxis = Position.HorizontalAxis;
-            var verticalAxis = Position.VeriticalAxis;
-
+            var shipPosition = GetInitialPosition();
+            
             for (int i = 0; i < Size; i++)
             {
-                if (positon.HorizontalAxis == horizontalAxis && positon.VeriticalAxis == verticalAxis)
+                if (missilePosition.HorizontalAxis == shipPosition.HorizontalAxis && 
+                    missilePosition.VeriticalAxis == shipPosition.VeriticalAxis)
                 {
                     return true;
                 }
 
-                if (Direction == ShipDirection.Horizontal)
-                {
-                    verticalAxis++;
-                }
-                else
-                {
-                    horizontalAxis++;
-                }
+                shipPosition.MoveToNextPosition(Direction);
             }
 
             return false;

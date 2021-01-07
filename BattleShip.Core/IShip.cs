@@ -24,5 +24,7 @@ namespace BattleShip.Core
         void SetDirection(ShipDirection direction);
 
         void IncreaseHit();
+
+        GridCordinate GetInitialPosition();
     }
 }

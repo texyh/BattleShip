@@ -9,8 +9,8 @@ namespace BattleShip.Core
     public class Game
     {
         public readonly int[,] OceanGrid = new int[Core.OceanGrid.ROWS, Core.OceanGrid.COLUMNS];
-
         private IList<IShip> Ships = new List<IShip>();
+        public int ShipCount => Ships.Count;
 
         public Game()
         {
@@ -18,40 +18,13 @@ namespace BattleShip.Core
             AddTwoDestroyers();
         }
 
-        public int ShipCount => Ships.Count;
-
         public ShotStatus FireMissile(string coordinate)
         {
-            var position = ConvertToGridCoordinate(coordinate);
+            var position = coordinate.ToGridCordinate();
 
-            if (OceanGrid[position.HorizontalAxis, position.VeriticalAxis].ContainsShip())
+            if (CordinateContainsShip(position))
             {
-                IShip impactedShip = null;
-                var floatingShips = Ships.Where(x => !x.IsSunk);
-
-                foreach (var ship in floatingShips)
-                {
-                    if (ship.IsHit(position))
-                    {
-                        ship.IncreaseHit();
-                        impactedShip = ship;
-                        OceanGrid[position.HorizontalAxis, position.VeriticalAxis] = (int)GridPositionType.EmptySpace;
-                        break;
-                    }
-                }
-
-                if (Ships.All(x => x.IsSunk))
-                {
-                    return ShotStatus.SinkedAllShips;
-                }
-                else if (impactedShip != null && impactedShip.IsSunk)
-                {
-                    return ShotStatus.Sinks;
-                }
-                else
-                {
-                    return ShotStatus.Hits;
-                }
+                return AttackPosition(position);
             }
 
             return ShotStatus.Misses;
@@ -78,121 +51,85 @@ namespace BattleShip.Core
 
         private void AddShipToOceanGrid(IShip ship)
         {
-            while (ShipHasOverlapped(ship))
+            while (ShipIsNotWithinTheOceanGrid(ship))
             {
                 SetShipPositionAndDirection(ship);
             }
 
-            var horizontalAxis = ship.Position.HorizontalAxis;
-            var verticalAxis = ship.Position.VeriticalAxis;
+            var shipPosition = ship.GetInitialPosition();
 
             for (int i = 0; i < ship.Size; i++)
             {
-                OceanGrid[horizontalAxis, verticalAxis] = (int)GridPositionType.Ship;
-
-                if (ship.Direction == ShipDirection.Vertical)
-                {
-                    horizontalAxis++;
-                }
-                else
-                {
-                    verticalAxis++;
-                }
+                OceanGrid[shipPosition.HorizontalAxis, shipPosition.VeriticalAxis] = (int)GridPositionType.Ship;
+                shipPosition.MoveToNextPosition(ship.Direction);
             }
 
             Ships.Add(ship);
         }
 
-        private void SetShipPositionAndDirection(IShip ship)
+        private ShotStatus AttackPosition(GridCordinate position) 
         {
-            var direction = GetRandomDirection();
-            ship.SetDirection(direction);
-            ship.SetPosition(GetRandomGridPosition(direction, ship.Size));
+            IShip impactedShip = null;
+            var floatingShips = Ships.Where(x => !x.IsSunk);
+
+            foreach (var ship in floatingShips)
+            {
+                if (ship.IsHit(position))
+                {
+                    ship.IncreaseHit();
+                    impactedShip = ship;
+                    OceanGrid[position.HorizontalAxis, position.VeriticalAxis] = (int)GridPositionType.EmptySpace;
+                    break;
+                }
+            }
+
+            return ReportAttackStatus(impactedShip);
         }
 
-        private GridCordinate GetRandomGridPosition(ShipDirection shipDirection, int shipSize)
+        private ShotStatus ReportAttackStatus(IShip impactedShip) 
         {
-            if (shipDirection == ShipDirection.Vertical)
+            if (Ships.All(x => x.IsSunk))
             {
-                return new GridCordinate
-                {
-                    VeriticalAxis = new Random().Next(0, Core.OceanGrid.COLUMNS),
-                    HorizontalAxis = new Random().Next(0, Core.OceanGrid.ROWS - shipSize)
-                };
+                return ShotStatus.SinkedAllShips;
+            }
+            else if (impactedShip != null && impactedShip.IsSunk)
+            {
+                return ShotStatus.Sinks;
             }
             else
             {
-                return new GridCordinate
-                {
-                    VeriticalAxis = new Random().Next(0, Core.OceanGrid.COLUMNS - shipSize),
-                    HorizontalAxis = new Random().Next(0, Core.OceanGrid.ROWS)
-                };
+                return ShotStatus.Hits;
             }
         }
 
-        private ShipDirection GetRandomDirection()
+        private void SetShipPositionAndDirection(IShip ship)
         {
-            var randomDirection = new Random().Next(0, 2);
-
-            return randomDirection == 0 ? ShipDirection.Vertical : ShipDirection.Horizontal;
+            var direction = ShipDirectionHelper.GetRandomDirection();
+            ship.SetDirection(direction);
+            ship.SetPosition(PositionHelper.GetRandomGridPosition(direction, ship.Size));
         }
 
-        private bool ShipHasOverlapped(IShip ship)
+        private bool ShipIsNotWithinTheOceanGrid(IShip ship)
         {
-            var horizontalAxis = ship.Position.HorizontalAxis;
-            var verticalAxis = ship.Position.VeriticalAxis;
-
+            var shipPosition = ship.GetInitialPosition();
+            
             for (int i = 0; i < ship.Size; i++)
             {
-                if (OceanGrid[horizontalAxis, verticalAxis].ContainsShip())
+                if (CordinateContainsShip(shipPosition))
                 {
                     return true;
                 }
 
-                if (ship.Direction == ShipDirection.Vertical)
-                {
-                    horizontalAxis++;
-                }
-                else
-                {
-                    verticalAxis++;
-                }
+                shipPosition.MoveToNextPosition(ship.Direction);
             }
 
             return false;
         }
 
-        private GridCordinate ConvertToGridCoordinate(string coordinate)
+        private bool CordinateContainsShip(GridCordinate position)
         {
-            if (string.IsNullOrEmpty(coordinate) || coordinate.Length < 2)
-            {
-                throw new ArgumentException("Invalid Coordinates");
-            }
-
-            var column = coordinate.Substring(0, 1);
-            var row = coordinate.Substring(1, coordinate.Length - 1);
-            var charColumn = column.ToCharArray()[0];
-
-            if (!int.TryParse(row, out var horizontalAxis))
-            {
-                throw new ArgumentException("Invalid Coordinates");
-            }
-
-            if (!char.IsLetter(charColumn))
-            {
-                throw new ArgumentException("Invalid Coordinates");
-            }
-
-            var verticalAxis = char.ToUpper(charColumn) - 65;
-
-            var gridCoordinate = new GridCordinate { HorizontalAxis = horizontalAxis - 1, VeriticalAxis = verticalAxis };
-
-            if (gridCoordinate.IsInvalid())
-            {
-                throw new ArgumentException("Invalid Coordinates");
-            }
-
-            return gridCoordinate;
+            return OceanGrid[position.HorizontalAxis, position.VeriticalAxis].ContainsShip();
         }
+
     }
 }
